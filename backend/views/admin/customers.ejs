@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Customer Management - NetTec Admin</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+<style>
+:root {
+    --primary: #0B1F3A;
+    --accent: #FFC107;
+    --bg-light: #243546;
+}
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+}
+.sidebar-item-active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid var(--accent);
+}
+.status-active {
+    @apply text-green-600 font-semibold;
+}
+.status-blocked {
+    @apply text-red-600 font-semibold;
+}
+</style>
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#0B1F3A',
+                accent: '#FFC107',
+            },
+        },
+    },
+}
+</script>
+</head>
+
+<body class="antialiased text-slate-800">
+
+<div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar') %>
+
+    <!-- Main -->
+    <main class="flex-1 ml-64 flex flex-col">
+
+        <!-- Header -->
+        <%- include('../partials/header') %>
+
+        <!-- Content -->
+        <div class="p-8 space-y-8">
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <p class="text-xs text-slate-500 uppercase font-bold">Total Customers</p>
+                    <h3 class="text-2xl font-bold text-primary mt-2"><%= totalCustomers %></h3>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <p class="text-xs text-slate-500 uppercase font-bold">Active Customers</p>
+                    <h3 class="text-2xl font-bold text-primary mt-2"><%= activeCustomers %></h3>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <p class="text-xs text-slate-500 uppercase font-bold">New This Month</p>
+                    <h3 class="text-2xl font-bold text-primary mt-2"><%= newCustomers %></h3>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <p class="text-xs text-slate-500 uppercase font-bold">Blocked</p>
+                    <h3 class="text-2xl font-bold text-primary mt-2"><%= blockedCustomers %></h3>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <% const viewFilters = typeof filters !== 'undefined' ? filters : {}; %>
+            <form class="flex gap-4 items-center bg-white p-4 rounded-xl shadow border" method="GET" action="/admin/customers">
+                <input type="text" name="search" placeholder="Search by ID, name, email, phone..." 
+                       value="<%= viewFilters.search || '' %>"
+                       class="border rounded p-2 flex-1"/>
+
+                <select name="status" class="border rounded p-2">
+                    <option value="">All Status</option>
+                    <option value="active" <%= viewFilters.status === 'active' ? 'selected' : '' %>>Active</option>
+                    <option value="blocked" <%= viewFilters.status === 'blocked' ? 'selected' : '' %>>Blocked</option>
+                </select>
+
+                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-accent">Filter</button>
+
+                <a href="/admin/customers/add" class="ml-auto">
+                    <button type="button" class="bg-accent text-primary px-4 py-2 rounded hover:bg-yellow-400">
+                        + Add Customer
+                    </button>
+                </a>
+            </form>
+
+            <!-- Customers Table -->
+            <div class="overflow-x-auto bg-white p-4 rounded-xl shadow border">
+                <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-100">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Email</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Phone</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Orders</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Total Spent</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="bg-white divide-y divide-slate-200">
+                        <% customers.forEach(customer => { %>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><%= customer.id %></td>
+                            <td class="px-6 py-4 whitespace-nowrap"><%= customer.name %></td>
+                            <td class="px-6 py-4 whitespace-nowrap"><%= customer.email %></td>
+                            <td class="px-6 py-4 whitespace-nowrap"><%= customer.phone %></td>
+                            <td class="px-6 py-4 whitespace-nowrap"><%= customer.totalOrders %></td>
+                            <td class="px-6 py-4 whitespace-nowrap">$<%= customer.totalSpent %></td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <% if(customer.status === "active"){ %>
+                                    <span class="status-active">Active</span>
+                                <% } else { %>
+                                    <span class="status-blocked">Blocked</span>
+                                <% } %>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <a href="/admin/customers/edit/<%= customer.id %>" class="text-blue-600 hover:underline">Edit</a> |
+                                <a href="/admin/customers/delete/<%= customer.id %>" class="text-red-600 hover:underline">Delete</a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <%- include('../partials/footer') %>
+
+    </main>
+
+</div>
+
+</body>
+</html>

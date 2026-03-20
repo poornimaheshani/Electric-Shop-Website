@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Add Customer - NetTec Admin</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+<style>
+:root {
+  --primary: #0B1F3A;
+  --accent: #FFC107;
+  --bg-light: #F8FAFC;
+}
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-light);
+}
+</style>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#0B1F3A',
+        accent: '#FFC107',
+      },
+    },
+  },
+};
+</script>
+</head>
+
+<body class="antialiased text-slate-800">
+<div class="flex min-h-screen">
+
+  <%- include('../partials/sidebar') %>
+
+  <main class="flex-1 ml-64 flex flex-col">
+
+    <%- include('../partials/header') %>
+
+    <div class="p-8 space-y-6">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-primary">Add Customer</h1>
+        <a href="/admin/customers" class="text-primary hover:underline">Back to Customers</a>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow border max-w-2xl">
+        <form method="POST" action="/admin/customers/add" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Name</label>
+            <input type="text" name="name" class="w-full border rounded p-2" required>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+            <input type="email" name="email" class="w-full border rounded p-2">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Phone</label>
+            <input type="text" name="phone" class="w-full border rounded p-2">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Address</label>
+            <textarea name="address" rows="3" class="w-full border rounded p-2"></textarea>
+          </div>
+
+          <div class="flex gap-3">
+            <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-slate-800">Save Customer</button>
+            <a href="/admin/customers" class="bg-slate-200 text-slate-800 px-4 py-2 rounded hover:bg-slate-300">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+
+  </main>
+</div>
+</body>
+</html>

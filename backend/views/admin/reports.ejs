@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Reports - NetTec Admin</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+<style>
+:root {
+    --primary: #0B1F3A;
+    --accent: #FFC107;
+    --bg-light: #F8FAFC;
+}
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+}
+.sidebar-item-active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid var(--accent);
+}
+.status-success { color: #16a34a; font-weight: 600; }
+.status-failed  { color: #dc2626; font-weight: 600; }
+</style>
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#0B1F3A',
+                accent: '#FFC107',
+            },
+        },
+    },
+}
+</script>
+</head>
+
+<body class="antialiased text-slate-800">
+
+<div class="flex min-h-screen">
+
+    <%- include('../partials/sidebar') %>
+
+    <main class="flex-1 ml-64 flex flex-col">
+
+        <%- include('../partials/header') %>
+
+        <div class="p-8 space-y-8">
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <p class="text-xs text-slate-500 uppercase font-bold">Total Orders</p>
+                    <h3 class="text-2xl font-bold text-primary mt-2"><%= totalOrders %></h3>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <p class="text-xs text-slate-500 uppercase font-bold">Completed</p>
+                    <h3 class="text-2xl font-bold text-primary mt-2"><%= completedOrders %></h3>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <p class="text-xs text-slate-500 uppercase font-bold">Pending</p>
+                    <h3 class="text-2xl font-bold text-primary mt-2"><%= pendingOrders %></h3>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <p class="text-xs text-slate-500 uppercase font-bold">Cancelled</p>
+                    <h3 class="text-2xl font-bold text-primary mt-2"><%= cancelledOrders %></h3>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <% const viewFilters = typeof filters !== 'undefined' ? filters : {}; %>
+            <form class="flex gap-4 items-center bg-white p-4 rounded-xl shadow border" method="GET" action="/admin/reports">
+                <input type="text" name="search" placeholder="Search by customer, order ID..."
+                       value="<%= viewFilters.search || '' %>"
+                       class="border rounded p-2 flex-1"/>
+
+                <select name="status" class="border rounded p-2">
+                    <option value="">All Status</option>
+                    <option value="completed" <%= viewFilters.status === 'completed' ? 'selected' : '' %>>Completed</option>
+                    <option value="pending"   <%= viewFilters.status === 'pending'   ? 'selected' : '' %>>Pending</option>
+                    <option value="cancelled" <%= viewFilters.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+                </select>
+
+                <input type="date" name="from" value="<%= viewFilters.from || '' %>" class="border rounded p-2"/>
+                <input type="date" name="to"   value="<%= viewFilters.to   || '' %>" class="border rounded p-2"/>
+
+                <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-accent">Filter</button>
+                <a href="/admin/reports" class="bg-slate-200 text-slate-700 px-4 py-2 rounded hover:bg-slate-300">Clear</a>
+            </form>
+
+            <!-- Reports Table -->
+            <div class="overflow-x-auto bg-white p-4 rounded-xl shadow border">
+                <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-100">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Order ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Customer</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Total</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Payment Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-slate-200">
+                        <% if (reports.length === 0) { %>
+                        <tr>
+                            <td colspan="6" class="px-6 py-8 text-center text-slate-400">No records found.</td>
+                        </tr>
+                        <% } %>
+                        <% reports.forEach(report => { %>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><%= report.orderId %></td>
+                            <td class="px-6 py-4 whitespace-nowrap"><%= report.customerName %></td>
+                            <td class="px-6 py-4 whitespace-nowrap"><%= report.date %></td>
+                            <td class="px-6 py-4 whitespace-nowrap">$<%= report.total %></td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <% if (report.status === 'completed') { %>
+                                    <span class="status-success">Completed</span>
+                                <% } else if (report.status === 'pending') { %>
+                                    <span class="text-yellow-600 font-semibold">Pending</span>
+                                <% } else { %>
+                                    <span class="status-failed">Cancelled</span>
+                                <% } %>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <a href="/admin/reports/view/<%= report.orderId %>" class="text-blue-600 hover:underline">View</a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <%- include('../partials/footer') %>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NetTec Admin Dashboard</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+<style>
+:root {
+    --primary: #0B1F3A;
+    --accent: #FFC107;
+    --bg-light: #F8FAFC;
+}
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+}
+.sidebar-item-active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid var(--accent);
+}
+</style>
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#0B1F3A',
+                accent: '#FFC107',
+            },
+        },
+    },
+}
+</script>
+
+</head>
+
+<body class="antialiased text-slate-800">
+
+<div class="flex min-h-screen">
+
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar') %>
+
+    <!-- Main -->
+    <main class="flex-1 ml-64 flex flex-col">
+
+        <!-- Header -->
+        <%- include('../partials/header') %>
+
+        <!-- Content -->
+        <div class="p-8 space-y-8">
+
+            <div class="grid grid-cols-4 gap-6">
+
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <p class="text-xs text-slate-500 uppercase font-bold">Total Revenue</p>
+                    <h3 class="text-2xl font-bold text-primary mt-2">LKR 0</h3>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <p class="text-xs text-slate-500 uppercase font-bold">Total Orders</p>
+                    <h3 class="text-2xl font-bold text-primary mt-2">0</h3>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <p class="text-xs text-slate-500 uppercase font-bold">Customers</p>
+                    <h3 class="text-2xl font-bold text-primary mt-2">0</h3>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow border">
+    <p class="text-xs text-slate-500 uppercase font-bold">Active Products</p>
+    <h3 class="text-2xl font-bold text-primary mt-2">
+        <%= stats.products %>
+    </h3>
+</div>
+
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <%- include('../partials/footer') %>
+
+    </main>
+
+</div>
+
+</body>
+</html>

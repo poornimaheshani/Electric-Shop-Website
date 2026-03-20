@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= pageTitle %> - NetTec Admin</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+<style>
+.bg-primary { background-color: #0B1F3A; }
+.bg-accent-yellow { background-color: #FFC107; }
+.sidebar-item-active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid var(--accent);
+}
+</style>
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#0B1F3A',
+                accent: '#FFC107',
+            },
+        },
+    },
+}
+</script>
+
+</head>
+<body class="flex min-h-screen bg-slate-100">
+
+<%- include('../partials/sidebar') %>
+
+<div class="ml-64 flex-1 flex flex-col">
+
+  <%- include('../partials/header') %>
+
+  <main class="p-8">
+
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold">Products</h2>
+
+      <button id="openAddModal"
+          class="bg-accent-yellow hover:bg-yellow-400 text-slate-900 px-5 py-2 rounded-lg flex items-center gap-2 shadow transition">
+          <span class="material-symbols-outlined">add</span>
+          Add Product
+      </button>
+    </div>
+
+    <!-- Product Table -->
+    <div class="bg-white shadow rounded-xl overflow-hidden">
+      <table class="w-full text-left">
+        <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+          <tr>
+            <th class="px-6 py-3">Image</th>
+            <th class="px-6 py-3">Name</th>
+            <th class="px-6 py-3">Category</th>
+            <th class="px-6 py-3">Price</th>
+            <th class="px-6 py-3">Stock</th>
+            <th class="px-6 py-3">Status</th>
+            <th class="px-6 py-3 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y">
+          <% products.forEach(product => { %>
+          <tr class="hover:bg-slate-50 cursor-pointer"
+              onclick="window.location='/admin/product/view/<%= product.id %>'">
+
+            <td class="px-6 py-3" onclick="event.stopPropagation()">
+              <img src="<%= product.image ? '/uploads/' + product.image : '/images/no-image.png' %>"
+                   class="w-12 h-12 object-cover rounded-md border"/>
+            </td>
+
+            <td class="px-6 py-3 font-semibold">
+              <a href="/admin/product/view/<%= product.id %>"
+                 class="hover:text-blue-600"
+                 onclick="event.stopPropagation()">
+                <%= product.name %>
+              </a>
+            </td>
+
+            <td class="px-6 py-3 text-sm text-slate-500"><%= product.category %></td>
+
+            <td class="px-6 py-3 font-medium">Rs <%= product.price.toLocaleString() %></td>
+
+            <td class="px-6 py-3"><%= product.stock %></td>
+
+            <td class="px-6 py-3">
+              <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase
+                <%= product.status === 'In Stock'
+                ? 'bg-emerald-100 text-emerald-700'
+                : product.status === 'Low Stock'
+                ? 'bg-amber-100 text-amber-700'
+                : 'bg-red-100 text-red-700' %>">
+                <%= product.status %>
+              </span>
+            </td>
+
+            <td class="px-6 py-3 text-right" onclick="event.stopPropagation()">
+              <div class="flex justify-end gap-2">
+                <button class="editBtn p-2 text-slate-400 hover:text-blue-600"
+                        data-id="<%= product.id %>">
+                  <span class="material-symbols-outlined">edit</span>
+                </button>
+                <button class="deleteBtn p-2 text-slate-400 hover:text-red-500"
+                        data-id="<%= product.id %>">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+<!-- Add/Edit Modal -->
+<div id="productModal"
+     class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 items-center justify-center">
+
+  <div class="bg-white w-96 rounded-xl p-6 shadow-2xl relative">
+
+    <h3 id="modalTitle" class="text-lg font-bold mb-4">Add Product</h3>
+
+    <form id="productForm" enctype="multipart/form-data">
+      <input type="hidden" name="id" id="productId">
+
+      <div class="mb-3">
+        <label class="block text-sm font-semibold mb-1">Name</label>
+        <input type="text" name="name" id="productName"
+               class="w-full border px-3 py-2 rounded-md" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="block text-sm font-semibold mb-1">Category</label>
+        <input type="text" name="category" id="productCategory"
+               class="w-full border px-3 py-2 rounded-md" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="block text-sm font-semibold mb-1">Price</label>
+        <input type="number" name="price" id="productPrice"
+               class="w-full border px-3 py-2 rounded-md" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="block text-sm font-semibold mb-1">Stock</label>
+        <input type="number" name="stock" id="productStock"
+               class="w-full border px-3 py-2 rounded-md" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="block text-sm font-semibold mb-1">Status</label>
+        <select name="status" id="productStatus"
+                class="w-full border px-3 py-2 rounded-md">
+          <option>In Stock</option>
+          <option>Low Stock</option>
+          <option>Out of Stock</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-sm font-semibold mb-1">Image</label>
+        <input type="file" name="image" id="productImage" accept="image/*">
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button type="button" id="closeModal"
+                class="px-4 py-2 rounded bg-slate-200">
+          Cancel
+        </button>
+        <button type="submit"
+                class="px-4 py-2 rounded bg-primary text-white">
+          Save
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<script>
+
+const modal = document.getElementById('productModal');
+const openBtn = document.getElementById('openAddModal');
+const closeBtn = document.getElementById('closeModal');
+const form = document.getElementById('productForm');
+const modalTitle = document.getElementById('modalTitle');
+
+const productIdInput = document.getElementById('productId');
+const productName = document.getElementById('productName');
+const productCategory = document.getElementById('productCategory');
+const productPrice = document.getElementById('productPrice');
+const productStock = document.getElementById('productStock');
+const productStatus = document.getElementById('productStatus');
+
+let editMode = false;
+
+// OPEN ADD MODAL
+openBtn.addEventListener('click', () => {
+    modalTitle.textContent = "Add Product";
+    editMode = false;
+    form.reset();
+    productIdInput.value = "";
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+});
+
+// CLOSE MODAL
+closeBtn.addEventListener('click', () => {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+});
+
+window.addEventListener('click', e => {
+    if (e.target === modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+});
+
+// EDIT PRODUCT
+document.querySelectorAll('.editBtn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        const res = await fetch(`/admin/product/${id}`);
+        const data = await res.json();
+
+        editMode = true;
+        modalTitle.textContent = "Edit Product";
+        productIdInput.value = data.id;
+        productName.value = data.name;
+        productCategory.value = data.category;
+        productPrice.value = data.price;
+        productStock.value = data.stock;
+        productStatus.value = data.status;
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    });
+});
+
+// DELETE PRODUCT
+document.querySelectorAll('.deleteBtn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        if (!confirm("Delete this product?")) return;
+        await fetch(`/admin/product/delete/${id}`, { method: 'DELETE' });
+        location.reload();
+    });
+});
+
+// FORM SUBMIT
+form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    let url = "/admin/products/add";
+    let method = "POST";
+
+    if (editMode) {
+        const id = productIdInput.value;
+        url = `/admin/product/update/${id}`;
+        method = "PUT";
+    }
+
+    await fetch(url, { method: method, body: formData });
+    location.reload();
+});
+
+</script>
+
+</body>
+</html>
