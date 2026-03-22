@@ -22,6 +22,12 @@ router.get('/products/edit/:id',    adminController.editProductPage);
 router.post('/products/edit/:id',   adminController.updateProduct);
 router.delete('/products/delete/:id', adminController.deleteProduct);
 
+
+// Product modal routes 
+router.get('/product/:id',           adminController.getProductById);
+router.put('/product/update/:id',    adminController.updateProduct);
+router.delete('/product/delete/:id', adminController.deleteProduct);
+
 // ===== Customers =====
 router.get('/customers', adminController.getCustomers);
 router.get('/customers/add', adminController.addCustomerPage);
