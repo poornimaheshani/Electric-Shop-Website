@@ -141,8 +141,16 @@ tailwind.config = {
 
       <div class="mb-3">
         <label class="block text-sm font-semibold mb-1">Category</label>
-        <input type="text" name="category" id="productCategory"
-               class="w-full border px-3 py-2 rounded-md" required>
+        <select name="category" id="productCategory"
+        class="w-full border px-3 py-2 rounded-md" required>
+  <option value="">Select Category</option>
+  <option value="Circuit Protection">Circuit Protection</option>
+  <option value="Electrical Supplies">Electrical Supplies</option>
+  <option value="LED & Lighting">LED & Lighting</option>
+  <option value="Home Electronics">Home Electronics</option>
+  <option value="Industrial Equipment">Industrial Equipment</option>
+  <option value="Tools & Accessories">Tools & Accessories</option>
+</select>
       </div>
 
       <div class="mb-3">
