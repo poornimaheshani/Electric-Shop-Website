@@ -419,3 +419,17 @@ exports.getReports = async (req, res) => {
     res.status(500).send('Database error');
   }
 };
+// GET PRODUCT BY ID
+exports.getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [rows] = await db.query('SELECT * FROM products WHERE id = ?', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    return res.json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Database error' });
+  }
+};
