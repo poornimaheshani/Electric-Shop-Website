@@ -77,10 +77,26 @@ export function Navbar() {
     gap: "10px",
   };
 
+  const mobileMenuItemStyle = {
+    color: "white",
+    cursor: "pointer",
+    padding: "8px 12px",
+    borderRadius: "8px",
+    margin: 0,
+  };
+
+  const mobileButtonStyle = {
+    display: "flex",
+    background: "none",
+    border: "none",
+    color: "white",
+    cursor: "pointer",
+  };
+
   return (
     <nav style={navStyle}>
       <div style={containerStyle}>
-        
+
         {/* Logo */}
         <div style={logoStyle} onClick={() => navigate("/")}>
           <div style={zapIconWrapper}>
@@ -113,14 +129,17 @@ export function Navbar() {
 
         {/* Desktop Icons */}
         <div style={desktopMenuStyle}>
-          
+
           {/* Wishlist */}
-          <Heart style={iconStyle} />
+          <Heart
+            style={iconStyle}
+            onClick={() => navigate("/wishlist")}
+          />
 
           {/* Cart */}
           <ShoppingCart
             style={iconStyle}
-            onClick={() => navigate("/cart")}
+            onClick={() => navigate("/addtocart")}
           />
 
           {/* Profile */}
@@ -128,17 +147,19 @@ export function Navbar() {
             style={iconStyle}
             onClick={() => navigate("/profile")}
           />
+
         </div>
 
         {/* Mobile Menu Button */}
-        <div style={{ display: "none" }}>
+        <div style={{ display: "flex" }}>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            style={{ background: "none", border: "none", color: "white" }}
+            style={mobileButtonStyle}
           >
             {isMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
+
       </div>
 
       {/* Mobile Menu */}
@@ -150,13 +171,25 @@ export function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             style={mobileMenuStyle}
           >
-            <p onClick={() => navigate("/")}>Home</p>
-            <p onClick={() => navigate("/categories")}>Categories</p>
-            <p onClick={() => navigate("/products")}>Products</p>
-            <p onClick={() => navigate("/contactus")}>Contact</p>
+            <p style={mobileMenuItemStyle} onClick={() => { navigate("/"); setIsMenuOpen(false); }}>
+              🏠 Home
+            </p>
+            <p style={mobileMenuItemStyle} onClick={() => { navigate("/products"); setIsMenuOpen(false); }}>
+              📦 Categories
+            </p>
+            <p style={mobileMenuItemStyle} onClick={() => { navigate("/products"); setIsMenuOpen(false); }}>
+              🛒 Products
+            </p>
+            <p style={mobileMenuItemStyle} onClick={() => { navigate("/aboutus"); setIsMenuOpen(false); }}>
+              ℹ️ About Us
+            </p>
+            <p style={mobileMenuItemStyle} onClick={() => { navigate("/contact"); setIsMenuOpen(false); }}>
+              📞 Contact
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
+
     </nav>
   );
 }

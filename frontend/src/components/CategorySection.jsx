@@ -1,6 +1,7 @@
 import React from "react";
 import "./CategorySection.css";
-import { Cable, Lightbulb, Tv, Factory, Wrench } from "lucide-react";
+import { Cable, Lightbulb, Tv, Factory, Wrench, ShieldCheck } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const categories = [
   {
@@ -8,34 +9,48 @@ const categories = [
     name: "Electrical Supplies",
     description: "Wires, cables, switches",
     icon: Cable,
+    filter: "Electrical Supplies",
   },
   {
     id: 2,
     name: "LED & Lighting",
     description: "Modern lighting solutions",
     icon: Lightbulb,
+    filter: "LED & Lighting",
   },
   {
     id: 3,
     name: "Home Electronics",
     description: "Smart home essentials",
     icon: Tv,
+    filter: "Home Electronics",
   },
   {
     id: 4,
     name: "Industrial Equipment",
     description: "Heavy-duty solutions",
     icon: Factory,
+    filter: "Industrial Equipment",
   },
   {
     id: 5,
     name: "Tools & Accessories",
     description: "Professional-grade tools",
     icon: Wrench,
+    filter: "Tools & Accessories",
+  },
+    {
+    id: 3,
+    name: "Circuit Protection",
+    description: "Breakers, fuses & protection",
+    icon: ShieldCheck,
+    filter: "Circuit Protection",
   },
 ];
 
 export function CategorySection() {
+  const navigate = useNavigate();
+
   return (
     <section className="category-section">
       <div className="category-container">
@@ -53,7 +68,11 @@ export function CategorySection() {
           {categories.map((category) => {
             const Icon = category.icon;
             return (
-              <div key={category.id} className="category-card">
+              <div
+                key={category.id}
+                className="category-card"
+                onClick={() => navigate(`/products?category=${encodeURIComponent(category.filter)}`)}
+              >
                 <div className="icon-wrapper">
                   <Icon className="category-icon" />
                 </div>
