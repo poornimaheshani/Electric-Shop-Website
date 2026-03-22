@@ -5,7 +5,6 @@ import "../styles/profile.css";
 export default function Profile() {
   return (
     <div className="ad-page">
-      {/* Header */}
       <Navbar />
 
       <main className="ad-main">
@@ -13,7 +12,7 @@ export default function Profile() {
 
           {/* Breadcrumbs */}
           <nav className="ad-breadcrumbs">
-            <a href="#" className="ad-bc-link">Home</a>
+            <a href="/" className="ad-bc-link">Home</a>
             <span className="material-symbols-outlined ad-bc-sep">chevron_right</span>
             <span className="ad-bc-current">My Account</span>
           </nav>
@@ -33,44 +32,44 @@ export default function Profile() {
               <div className="ad-sidecard">
                 <nav className="ad-sidenav">
 
-                  <a href="#" className="ad-sidelink ad-sidelink-active">
+                  <a href="/profile" className="ad-sidelink ad-sidelink-active">
                     <span className="material-symbols-outlined">dashboard</span>
                     Dashboard
                   </a>
 
-                  <a href="#" className="ad-sidelink">
+                  <a href="/orders" className="ad-sidelink">
                     <span className="material-symbols-outlined">package</span>
                     My Orders
                   </a>
 
-                  <a href="#" className="ad-sidelink">
+                  <a href="/track-order" className="ad-sidelink">
                     <span className="material-symbols-outlined">local_shipping</span>
                     Track Order
                   </a>
 
-                  <a href="#" className="ad-sidelink">
+                  <a href="/wishlist" className="ad-sidelink">
                     <span className="material-symbols-outlined">favorite</span>
                     Wishlist
                   </a>
 
-                  <a href="#" className="ad-sidelink">
+                  <a href="/addresses" className="ad-sidelink">
                     <span className="material-symbols-outlined">location_on</span>
                     Addresses
                   </a>
 
-                  <a href="#" className="ad-sidelink">
+                  <a href="/payment-methods" className="ad-sidelink">
                     <span className="material-symbols-outlined">payments</span>
                     Payment Methods
                   </a>
 
-                  <a href="#" className="ad-sidelink">
+                  <a href="/account-details" className="ad-sidelink">
                     <span className="material-symbols-outlined">person</span>
                     Account Details
                   </a>
 
                   <div className="ad-side-sep" />
 
-                  <a href="#" className="ad-sidelink ad-danger">
+                  <a href="/" className="ad-sidelink ad-danger">
                     <span className="material-symbols-outlined">logout</span>
                     Logout
                   </a>
@@ -131,7 +130,7 @@ export default function Profile() {
               <div className="ad-tablecard">
                 <div className="ad-tablehead">
                   <h3 className="ad-h3">Recent Orders</h3>
-                  <a href="#" className="ad-link-primary">View All</a>
+                  <a href="/orders" className="ad-link-primary">View All</a>
                 </div>
 
                 <div className="ad-tablewrap">
@@ -183,8 +182,12 @@ export default function Profile() {
                       Track your shipping status in real-time or contact support.
                     </p>
                     <div className="ad-btnrow">
-                      <button className="ad-btn ad-btn-primary">Track Order</button>
-                      <button className="ad-btn ad-btn-outline">Support Center</button>
+                      <a href="/track-order">
+                        <button className="ad-btn ad-btn-primary">Track Order</button>
+                      </a>
+                      <a href="/contact">
+                        <button className="ad-btn ad-btn-outline">Support Center</button>
+                      </a>
                     </div>
                   </div>
                   <span className="material-symbols-outlined ad-quick-bgicon">
@@ -199,7 +202,9 @@ export default function Profile() {
                       As a premium member, you have access to exclusive deals.
                     </p>
                     <div className="ad-btnrow">
-                      <button className="ad-btn ad-btn-dark">Browse Deals</button>
+                      <a href="/products">
+                        <button className="ad-btn ad-btn-dark">Browse Deals</button>
+                      </a>
                     </div>
                   </div>
                   <span className="material-symbols-outlined ad-quick-bgicon ad-dark-bgicon">
@@ -217,22 +222,22 @@ export default function Profile() {
 
       {/* Mobile Bottom Nav */}
       <nav className="ad-bottomnav">
-        <a href="#" className="ad-bottomitem ad-bottomitem-active">
+        <a href="/" className="ad-bottomitem ad-bottomitem-active">
           <span className="material-symbols-outlined">home</span>
           <span className="ad-bottomlabel">Home</span>
         </a>
 
-        <a href="#" className="ad-bottomitem">
+        <a href="/products" className="ad-bottomitem">
           <span className="material-symbols-outlined">shopping_bag</span>
           <span className="ad-bottomlabel">Shop</span>
         </a>
 
-        <a href="#" className="ad-bottomitem">
+        <a href="/wishlist" className="ad-bottomitem">
           <span className="material-symbols-outlined">favorite</span>
           <span className="ad-bottomlabel">Wishlist</span>
         </a>
 
-        <a href="#" className="ad-bottomitem">
+        <a href="/profile" className="ad-bottomitem">
           <span className="material-symbols-outlined">account_circle</span>
           <span className="ad-bottomlabel">Account</span>
         </a>
