@@ -1,0 +1,141 @@
+.faqs-page {
+  background-color: #0f0f0f;
+  min-height: 100vh;
+  color: #ffffff;
+}
+
+/* Hero */
+.faqs-hero {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  padding: 80px 20px;
+  text-align: center;
+  border-bottom: 3px solid #f5c518;
+}
+
+.faqs-hero-content h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 15px;
+}
+
+.faqs-hero-content h1 span {
+  color: #f5c518;
+}
+
+.faqs-hero-content p {
+  font-size: 1.1rem;
+  color: #aaaaaa;
+}
+
+/* Container */
+.faqs-container {
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+/* Section */
+.faq-section {
+  margin-bottom: 40px;
+}
+
+.faq-category {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #f5c518;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+/* FAQ Item */
+.faq-item {
+  background-color: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+.faq-item.open {
+  border-color: #f5c518;
+}
+
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 18px 20px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s;
+}
+
+.faq-question:hover {
+  background-color: #222222;
+}
+
+.faq-item.open .faq-question {
+  background-color: #222222;
+  color: #f5c518;
+}
+
+.faq-icon {
+  font-size: 1.4rem;
+  color: #f5c518;
+  font-weight: 300;
+  min-width: 24px;
+  text-align: center;
+}
+
+.faq-answer {
+  padding: 15px 20px 20px;
+  color: #bbbbbb;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  border-top: 1px solid #2a2a2a;
+}
+
+/* Contact Box */
+.faq-contact-box {
+  background: linear-gradient(135deg, #1a1a1a, #222222);
+  border: 2px solid #f5c518;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.faq-contact-box h3 {
+  font-size: 1.5rem;
+  color: #f5c518;
+  margin-bottom: 10px;
+}
+
+.faq-contact-box p {
+  color: #aaaaaa;
+  margin-bottom: 25px;
+}
+
+.faq-contact-btn {
+  background-color: #f5c518;
+  color: #000000;
+  padding: 12px 35px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.faq-contact-btn:hover {
+  background-color: #e0b015;
+}
