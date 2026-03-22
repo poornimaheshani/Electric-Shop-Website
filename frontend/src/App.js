@@ -9,6 +9,11 @@ import ReviewRecommendations from "./pages/ReviewRecommendations";
 import AboutUs from "./pages/aboutus";
 import Contactus from "./pages/contactus";
 import Profile from "./pages/profile";
+import FAQs from "./pages/FAQs";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TrackOrder from "./pages/TrackOrder";
+import ReturnsExchanges from "./pages/ReturnsExchanges";
+import WarrantyPolicy from "./pages/WarrantyPolicy";
 
 
 function App() {
@@ -24,8 +29,12 @@ function App() {
         <Route path="/account-dashboard" element={<Navigate to="/profile" replace />} />
         <Route path="aboutus" element={<AboutUs />} />
         <Route path="/contact" element={<Contactus />} />
-        <Route path="profile" element={<Profile />} />
-  
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/faqs" element={<FAQs />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/track-order" element={<TrackOrder />} />
+        <Route path="/returns-exchanges" element={<ReturnsExchanges />} />
+        <Route path="/warranty-policy" element={<WarrantyPolicy />} />
       </Routes>
     </Router>
   );
