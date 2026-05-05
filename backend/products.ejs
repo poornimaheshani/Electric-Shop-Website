@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= pageTitle %> - NetTec Admin</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+<style>
+.bg-primary { background-color: #0B1F3A; }
+.bg-accent-yellow { background-color: #FFC107; }
+.sidebar-item-active {
+    background-color: #243546;
+    border-left: 4px solid var(--accent);
+}
+</style>
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#0B1F3A',
+                accent: '#FFC107',
+            },
+        },
+    },
+}
+</script>
+
+</head>
+<body class="flex min-h-screen bg-slate-100">
+
+<%- include('../partials/sidebar') %>
+
+<div class="ml-64 flex-1 flex flex-col">
+
+  <%- include('../partials/header') %>
+
+  <main class="p-8">
+
+    <div class="flex items-center justify-between mb-6">
+      <button id="openAddModal"
+          class="bg-accent-yellow hover:bg-yellow-400 text-slate-900 px-5 py-2 rounded-lg flex items-center gap-2 shadow transition">
+          <span class="material-symbols-outlined">add</span>
+          Add Product
+      </button>
+    </div>
+
+    <!-- Product Table -->
+    <div class="bg-white shadow rounded-xl overflow-hidden">
+      <table class="w-full text-left">
+        <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
+          <tr>
+            <th class="px-6 py-3">Images</th>
+            <th class="px-6 py-3">Name</th>
+            <th class="px-6 py-3">Category</th>
+            <th class="px-6 py-3">Price</th>
+            <th class="px-6 py-3">Discount %</th>
+            <th class="px-6 py-3">Discount Price</th>
+            <th class="px-6 py-3">Stock</th>
+            <th class="px-6 py-3">Status</th>
+            <th class="px-6 py-3 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y">
+          <% products.forEach(product => { %>
+          <%
+            let imageList = [];
+            try {
+              const parsed = JSON.parse(product.image);
+              imageList = Array.isArray(parsed) ? parsed : [product.image];
+            } catch(e) {
+              if (product.image) imageList = [product.image];
+            }
+            const firstImage = imageList[0] || null;
+          %>
+          <tr class="hover:bg-slate-50 cursor-pointer"
+              onclick="window.location='/admin/product/view/<%= product.id %>'">
+
+            <td class="px-6 py-3" onclick="event.stopPropagation()">
+              <div class="flex gap-1 items-end">
+                <% if (firstImage) { %>
+                  <img src="/uploads/<%= firstImage %>"
+                       class="w-12 h-12 object-cover rounded-md border"/>
+                <% } else { %>
+                  <img src="/images/no-image.png"
+                       class="w-12 h-12 object-cover rounded-md border"/>
+                <% } %>
+                <% if (imageList.length > 1) { %>
+                  <span class="text-xs text-slate-400 mb-1">+<%= imageList.length - 1 %></span>
+                <% } %>
+              </div>
+            </td>
+
+            <td class="px-6 py-3 font-semibold">
+              <a href="/admin/product/view/<%= product.id %>"
+                 class="hover:text-blue-600"
+                 onclick="event.stopPropagation()">
+                <%= product.name %>
+              </a>
+            </td>
+
+            <td class="px-6 py-3 text-sm text-slate-500"><%= product.category %></td>
+            <td class="px-6 py-3 font-medium">Rs <%= Number(product.price).toLocaleString() %></td>
+
+            <!-- ✅ Discount % -->
+            <td class="px-6 py-3">
+              <% if (product.discount_percent && Number(product.discount_percent) > 0) { %>
+                <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-red-100 text-red-600">
+                  🔥 <%= Number(product.discount_percent) %>% OFF
+                </span>
+              <% } else { %>
+                <span class="text-slate-400 text-sm">-</span>
+              <% } %>
+            </td>
+
+            <!-- ✅ Discount Price -->
+            <td class="px-6 py-3">
+              <% if (product.discount_price && Number(product.discount_price) > 0) { %>
+                <span class="font-bold text-red-600">Rs <%= Number(product.discount_price).toLocaleString() %></span>
+              <% } else { %>
+                <span class="text-slate-400 text-sm">-</span>
+              <% } %>
+            </td>
+
+            <td class="px-6 py-3"><%= product.stock %></td>
+
+            <td class="px-6 py-3">
+              <span class="px-2 py-1 rounded-full text-[10px] font-bold uppercase
+                <%= product.status === 'In Stock'
+                ? 'bg-emerald-100 text-emerald-700'
+                : product.status === 'Low Stock'
+                ? 'bg-amber-100 text-amber-700'
+                : 'bg-red-100 text-red-700' %>">
+                <%= product.status %>
+              </span>
+            </td>
+
+            <td class="px-6 py-3 text-right" onclick="event.stopPropagation()">
+              <div class="flex justify-end gap-2">
+                <button class="editBtn p-2 text-slate-400 hover:text-blue-600"
+                        data-id="<%= product.id %>">
+                  <span class="material-symbols-outlined">edit</span>
+                </button>
+                <button class="deleteBtn p-2 text-slate-400 hover:text-red-500"
+                        data-id="<%= product.id %>">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+</div>
+
+<!-- ===================== Add / Edit Modal ===================== -->
+<div id="productModal"
+     class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 items-center justify-center">
+
+  <div class="bg-white w-[520px] rounded-xl shadow-2xl relative max-h-[92vh] overflow-y-auto">
+    <div class="p-6">
+      <h3 id="modalTitle" class="text-lg font-bold mb-4">Add Product</h3>
+
+      <form id="productForm">
+        <input type="hidden" name="id" id="productId">
+
+        <!-- Name -->
+        <div class="mb-3">
+          <label class="block text-sm font-semibold mb-1">Name</label>
+          <input type="text" name="name" id="productName"
+                 class="w-full border px-3 py-2 rounded-md" required>
+        </div>
+
+        <!-- Category -->
+        <div class="mb-3">
+          <label class="block text-sm font-semibold mb-1">Category</label>
+          <select name="category" id="productCategory"
+                  class="w-full border px-3 py-2 rounded-md" required>
+            <option value="">Select Category</option>
+            <option value="Circuit Protection">Circuit Protection</option>
+            <option value="Electrical Supplies">Electrical Supplies</option>
+            <option value="LED & Lighting">LED & Lighting</option>
+            <option value="Home Electronics">Home Electronics</option>
+            <option value="Industrial Equipment">Industrial Equipment</option>
+            <option value="Tools & Accessories">Tools & Accessories</option>
+          </select>
+        </div>
+
+        <!-- Price -->
+        <div class="mb-3">
+          <label class="block text-sm font-semibold mb-1">Price (Rs)</label>
+          <input type="number" name="price" id="productPrice"
+                 class="w-full border px-3 py-2 rounded-md" required
+                 placeholder="e.g. 5000" min="0" step="0.01"
+                 oninput="calcDiscountPrice()">
+        </div>
+
+        <!-- Discount % -->
+        <div class="mb-3">
+          <label class="block text-sm font-semibold mb-1">
+            Discount %
+            <span class="text-slate-400 font-normal">(optional — leave 0 for no offer)</span>
+          </label>
+          <input type="number" name="discount_percent" id="productDiscountPercent"
+                 class="w-full border px-3 py-2 rounded-md"
+                 placeholder="e.g. 15" min="0" max="99" step="0.01"
+                 oninput="calcDiscountPrice()">
+        </div>
+
+        <!-- Discount Price (auto or manual) -->
+        <div class="mb-3">
+          <label class="block text-sm font-semibold mb-1">
+            Discount Price (Rs)
+            <span class="text-slate-400 font-normal">(auto-calculated or edit manually)</span>
+          </label>
+          <input type="number" name="discount_price" id="productDiscountPrice"
+                 class="w-full border px-3 py-2 rounded-md bg-slate-50"
+                 placeholder="Auto-filled when % is entered" min="0" step="0.01">
+          <p id="savingsNote" class="text-xs text-emerald-600 font-semibold mt-1 hidden"></p>
+        </div>
+
+        <!-- Stock -->
+        <div class="mb-3">
+          <label class="block text-sm font-semibold mb-1">Stock</label>
+          <input type="number" name="stock" id="productStock"
+                 class="w-full border px-3 py-2 rounded-md" required min="0">
+        </div>
+
+        <!-- Status -->
+        <div class="mb-3">
+          <label class="block text-sm font-semibold mb-1">Status</label>
+          <select name="status" id="productStatus"
+                  class="w-full border px-3 py-2 rounded-md">
+            <option>In Stock</option>
+            <option>Low Stock</option>
+            <option>Out of Stock</option>
+          </select>
+        </div>
+
+        <!-- Images -->
+        <div class="mb-4">
+          <label class="block text-sm font-semibold mb-1">
+            Images
+            <span class="text-slate-400 font-normal">(up to 5)</span>
+          </label>
+
+          <input type="file" id="productImages"
+                 accept="image/*" multiple
+                 class="w-full border px-3 py-2 rounded-md text-sm">
+
+          <p class="text-xs text-slate-400 mt-1">Hold Ctrl/Cmd to select multiple images</p>
+
+          <!-- New image previews -->
+          <div id="imagePreview" class="flex gap-2 flex-wrap mt-3"></div>
+
+          <!-- Existing images in edit mode -->
+          <div id="existingImages" class="hidden mt-3">
+            <p class="text-xs text-slate-500 mb-1 font-semibold">Current Images (replaced if you pick new ones):</p>
+            <div id="existingImageList" class="flex gap-2 flex-wrap"></div>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2 border-t">
+          <button type="button" id="closeModal"
+                  class="px-4 py-2 rounded bg-slate-200 hover:bg-slate-300">
+            Cancel
+          </button>
+          <button type="submit"
+                  class="px-4 py-2 rounded bg-primary text-white hover:opacity-90">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+
+const modal                   = document.getElementById('productModal');
+const openBtn                 = document.getElementById('openAddModal');
+const closeBtn                = document.getElementById('closeModal');
+const form                    = document.getElementById('productForm');
+const modalTitle              = document.getElementById('modalTitle');
+const productIdInput          = document.getElementById('productId');
+const productName             = document.getElementById('productName');
+const productCategory         = document.getElementById('productCategory');
+const productPrice            = document.getElementById('productPrice');
+const productStock            = document.getElementById('productStock');
+const productStatus           = document.getElementById('productStatus');
+const productDiscountPercent  = document.getElementById('productDiscountPercent');
+const productDiscountPrice    = document.getElementById('productDiscountPrice');
+const savingsNote             = document.getElementById('savingsNote');
+const imageInput              = document.getElementById('productImages');
+const imagePreview            = document.getElementById('imagePreview');
+const existingImages          = document.getElementById('existingImages');
+const existingImageList       = document.getElementById('existingImageList');
+
+let editMode = false;
+
+// ✅ Auto-calculate discount price
+function calcDiscountPrice() {
+  const price = parseFloat(productPrice.value) || 0;
+  const pct   = parseFloat(productDiscountPercent.value) || 0;
+
+  if (price > 0 && pct > 0) {
+    const discounted = price - (price * pct / 100);
+    productDiscountPrice.value = discounted.toFixed(2);
+    const savings = price - discounted;
+    savingsNote.textContent = `Customer saves Rs ${savings.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+    savingsNote.classList.remove('hidden');
+  } else {
+    productDiscountPrice.value = '';
+    savingsNote.classList.add('hidden');
+  }
+}
+
+// Also recalculate when price changes (useful in edit mode)
+productPrice.addEventListener('input', calcDiscountPrice);
+
+// ✅ Preview new images when selected
+imageInput.addEventListener('change', function () {
+  imagePreview.innerHTML = '';
+  Array.from(this.files).slice(0, 5).forEach((file, index) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'relative';
+
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.className = 'w-16 h-16 object-cover rounded-md border';
+
+      if (index === 0) {
+        const badge = document.createElement('span');
+        badge.textContent = 'Main';
+        badge.className = 'absolute -top-1 -left-1 bg-yellow-400 text-[9px] font-bold px-1 rounded';
+        wrapper.appendChild(badge);
+      }
+      wrapper.appendChild(img);
+      imagePreview.appendChild(wrapper);
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+// ✅ Open Add Modal
+openBtn.addEventListener('click', () => {
+  modalTitle.textContent = "Add Product";
+  editMode = false;
+  form.reset();
+  imageInput.value = '';
+  productIdInput.value = '';
+  imagePreview.innerHTML = '';
+  existingImages.classList.add('hidden');
+  existingImageList.innerHTML = '';
+  savingsNote.classList.add('hidden');
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+});
+
+// ✅ Close Modal
+closeBtn.addEventListener('click', closeModalFn);
+window.addEventListener('click', e => {
+  if (e.target === modal) closeModalFn();
+});
+
+function closeModalFn() {
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+}
+
+// ✅ Edit Product — load data into modal
+document.querySelectorAll('.editBtn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const id = btn.dataset.id;
+    const res = await fetch(`/admin/product/${id}`);
+    const data = await res.json();
+
+    editMode = true;
+    modalTitle.textContent = "Edit Product";
+    productIdInput.value  = data.id;
+    productName.value     = data.name;
+    productCategory.value = data.category;
+    productPrice.value    = data.price;
+    productStock.value    = data.stock;
+    productStatus.value   = data.status;
+    imagePreview.innerHTML = '';
+    imageInput.value = '';
+
+    // ✅ Load discount fields
+    productDiscountPercent.value = data.discount_percent ? Number(data.discount_percent) : '';
+    productDiscountPrice.value   = data.discount_price   ? Number(data.discount_price)   : '';
+
+    // Show savings note if applicable
+    if (data.discount_percent && Number(data.discount_percent) > 0 &&
+        data.discount_price   && Number(data.discount_price) > 0) {
+      const savings = Number(data.price) - Number(data.discount_price);
+      savingsNote.textContent = `Customer saves Rs ${savings.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+      savingsNote.classList.remove('hidden');
+    } else {
+      savingsNote.classList.add('hidden');
+    }
+
+    // Show existing images
+    existingImageList.innerHTML = '';
+    let imageList = [];
+    try {
+      const parsed = JSON.parse(data.image);
+      imageList = Array.isArray(parsed) ? parsed : (data.image ? [data.image] : []);
+    } catch(e) {
+      if (data.image) imageList = [data.image];
+    }
+
+    if (imageList.length > 0) {
+      existingImages.classList.remove('hidden');
+      imageList.forEach((imgFile, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative';
+        const el = document.createElement('img');
+        el.src = `/uploads/${imgFile}`;
+        el.className = 'w-16 h-16 object-cover rounded-md border';
+        if (index === 0) {
+          const badge = document.createElement('span');
+          badge.textContent = 'Main';
+          badge.className = 'absolute -top-1 -left-1 bg-yellow-400 text-[9px] font-bold px-1 rounded';
+          wrapper.appendChild(badge);
+        }
+        wrapper.appendChild(el);
+        existingImageList.appendChild(wrapper);
+      });
+    } else {
+      existingImages.classList.add('hidden');
+    }
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+  });
+});
+
+// ✅ Delete Product
+document.querySelectorAll('.deleteBtn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const id = btn.dataset.id;
+    if (!confirm("Delete this product?")) return;
+    await fetch(`/admin/product/delete/${id}`, { method: 'DELETE' });
+    location.reload();
+  });
+});
+
+// ✅ FORM SUBMIT
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const files = imageInput.files;
+  if (files.length > 5) {
+    alert('Maximum 5 images allowed.');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('name',             productName.value);
+  formData.append('category',         productCategory.value);
+  formData.append('price',            productPrice.value);
+  formData.append('stock',            productStock.value);
+  formData.append('status',           productStatus.value);
+  formData.append('discount_percent', productDiscountPercent.value || '');
+  formData.append('discount_price',   productDiscountPrice.value   || '');
+
+  Array.from(files).slice(0, 5).forEach(file => {
+    formData.append('images', file);
+  });
+
+  let url    = '/admin/products/add';
+  let method = 'POST';
+
+  if (editMode) {
+    const id = productIdInput.value;
+    url    = `/admin/products/edit/${id}`;
+    method = 'POST';
+  }
+
+  const response = await fetch(url, { method, body: formData });
+
+  if (response.redirected || response.ok) {
+    location.reload();
+  } else {
+    alert('Something went wrong. Please try again.');
+  }
+});
+
+</script>
+
+</body>
+</html>

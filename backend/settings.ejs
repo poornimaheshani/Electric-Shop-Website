@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title><%= pageTitle || 'NetTec Admin - Store Settings' %></title>
+
+  <!-- Tailwind + Plugins -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind Config -->
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#0B1F3A",
+            "accent": "#FFC107",
+            "background-light": "#f8fafc",
+            "sidebar-text": "#94a3b8",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.375rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+          },
+        },
+      },
+    }
+  </script>
+
+  <!-- Tailwind @apply styles -->
+  <style type="text/tailwindcss">
+    @layer base {
+      body { @apply font-display bg-background-light text-slate-900; }
+    }
+    .sidebar-link.active {
+      @apply text-accent bg-white/5 border-r-4 border-accent;
+    }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+
+  <!-- Minimal CSS for Tabs -->
+  <style>
+    body { min-height: max(884px, 100dvh); }
+
+    .tab {
+      cursor: pointer;
+      padding: 12px 0;
+      border: none;
+      background: transparent;
+      font-weight: 600;
+      color: #64748b; /* slate-500 */
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tab:hover { color: #334155; /* slate-700 */ }
+    .tab.active {
+      color: #0B1F3A;            /* primary */
+      border-bottom: 2px solid #0B1F3A;
+    }
+    .tab-panel { display: none; padding-top: 16px; }
+    .tab-panel.active { display: block; }
+  </style>
+</head>
+
+<body class="antialiased">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar') %>
+
+    <!-- Main Column -->
+    <div class="flex-1 ml-64 flex flex-col min-w-0">
+      <!-- Header -->
+      <%- include('../partials/header') %>
+
+      <!-- Content (Interactive Tabs Structure) -->
+      <main class="content flex-1 p-8 max-w-[1200px] w-full mx-auto">
+        <div class="page-head mb-8">
+          <h2 class="page-title text-2xl font-bold text-slate-900">Store Settings</h2>
+          <p class="page-subtitle text-slate-500 mt-1">Configure your global store preferences and system behavior.</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs border-b border-slate-200 mb-8">
+          <nav class="flex gap-8">
+            <button class="tab active" data-tab="general">General Info</button>
+            <button class="tab" data-tab="payments">Payments</button>
+            <button class="tab" data-tab="shipping">Shipping</button>
+            <button class="tab" data-tab="taxes">Taxes</button>
+            <button class="tab" data-tab="notifications">Notifications</button>
+            <button class="tab" data-tab="security">Security</button>
+          </nav>
+        </div>
+
+        <!-- Tab Panels -->
+        <div class="tab-content space-y-8">
+          <!-- =================== General Info =================== -->
+          <div class="tab-panel active" id="general">
+            <!-- General Information -->
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/30">
+                <div>
+                  <h3 class="text-lg font-bold text-slate-800">General Information</h3>
+                  <p class="text-sm text-slate-500">Public store identity and basic localization details.</p>
+                </div>
+              </div>
+
+              <div class="p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                  <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Store Name</label>
+                    <input type="text" value="NetTec Electronic" class="w-full rounded-xl border-slate-200 focus:ring-accent focus:border-accent text-sm py-2.5" />
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Support Email</label>
+                    <input type="email" value="support@nettec.lk" class="w-full rounded-xl border-slate-200 focus:ring-accent focus:border-accent text-sm py-2.5" />
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Phone Number</label>
+                    <input type="text" value="+94 11 234 5678" class="w-full rounded-xl border-slate-200 focus:ring-accent focus:border-accent text-sm py-2.5" />
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Default Currency</label>
+                    <select class="w-full rounded-xl border-slate-200 focus:ring-accent focus:border-accent text-sm py-2.5">
+                      <option>Sri Lankan Rupee (LKR)</option>
+                      <option>US Dollar (USD)</option>
+                    </select>
+                  </div>
+
+                  <div class="space-y-2 md:col-span-2">
+                    <label class="text-sm font-semibold text-slate-700">Store Physical Address</label>
+                    <textarea rows="3" class="w-full rounded-xl border-slate-200 focus:ring-accent focus:border-accent text-sm py-2.5">45 Galle Road, Colombo 03, Sri Lanka</textarea>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- System Configuration -->
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="px-8 py-6 border-b border-slate-100 bg-slate-50/30">
+                <h3 class="text-lg font-bold text-slate-800">System Configuration</h3>
+                <p class="text-sm text-slate-500">Enable or disable core system features.</p>
+              </div>
+
+              <div class="divide-y divide-slate-100">
+                <!-- Maintenance Mode -->
+                <div class="px-8 py-5 flex items-center justify-between hover:bg-slate-50/50 transition-colors">
+                  <div class="flex items-center gap-4">
+                    <div class="h-10 w-10 bg-slate-100 rounded-lg flex items-center justify-center text-slate-500">
+                      <span class="material-symbols-outlined">construction</span>
+                    </div>
+                    <div>
+                      <p class="text-sm font-bold text-slate-800">Maintenance Mode</p>
+                      <p class="text-xs text-slate-500">Disable storefront for public visitors while performing updates</p>
+                    </div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" />
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white
+                                after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                                after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all
+                                peer-checked:bg-primary">
+                    </div>
+                  </label>
+                </div>
+
+                <!-- Order Email Notifications -->
+                <div class="px-8 py-5 flex items-center justify-between hover:bg-slate-50/50 transition-colors">
+                  <div class="flex items-center gap-4">
+                    <div class="h-10 w-10 bg-slate-100 rounded-lg flex items-center justify-center text-slate-500">
+                      <span class="material-symbols-outlined">mail</span>
+                    </div>
+                    <div>
+                      <p class="text-sm font-bold text-slate-800">Order Email Notifications</p>
+                      <p class="text-xs text-slate-500">Automatically send emails to admins when a new order is received</p>
+                    </div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" checked />
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white
+                                after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                                after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all
+                                peer-checked:bg-primary">
+                    </div>
+                  </label>
+                </div>
+
+                <!-- SMS Critical Alerts -->
+                <div class="px-8 py-5 flex items-center justify-between hover:bg-slate-50/50 transition-colors">
+                  <div class="flex items-center gap-4">
+                    <div class="h-10 w-10 bg-slate-100 rounded-lg flex items-center justify-center text-slate-500">
+                      <span class="material-symbols-outlined">sms</span>
+                    </div>
+                    <div>
+                      <p class="text-sm font-bold text-slate-800">SMS Critical Alerts</p>
+                      <p class="text-xs text-slate-500">Receive immediate SMS for high-priority system events</p>
+                    </div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" />
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white
+                                after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                                after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all
+                                peer-checked:bg-primary">
+                    </div>
+                  </label>
+                </div>
+
+                <!-- 2FA Requirement -->
+                <div class="px-8 py-5 flex items-center justify-between hover:bg-slate-50/50 transition-colors">
+                  <div class="flex items-center gap-4">
+                    <div class="h-10 w-10 bg-slate-100 rounded-lg flex items-center justify-center text-slate-500">
+                      <span class="material-symbols-outlined">shield</span>
+                    </div>
+                    <div>
+                      <p class="text-sm font-bold text-slate-800">Two-Factor Authentication Requirement</p>
+                      <p class="text-xs text-slate-500">Force all administrative accounts to use 2FA</p>
+                    </div>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="sr-only peer" checked />
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white
+                                after:content-[''] after:absolute after:top-[2px] after:left-[2px]
+                                after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all
+                                peer-checked:bg-primary">
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-end gap-4 py-6">
+              <button class="px-6 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+                Discard Changes
+              </button>
+              <button class="px-8 py-2.5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/95 transition-all">
+                Save Changes
+              </button>
+            </div>
+          </div>
+
+          <!-- =================== Payments =================== -->
+          <div class="tab-panel" id="payments">
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="px-8 py-6 border-b border-slate-100 bg-slate-50/30">
+                <h3 class="text-lg font-bold text-slate-800">Payment Settings</h3>
+                <p class="text-sm text-slate-500">Configure payment gateways, currencies, and fraud controls.</p>
+              </div>
+
+              <div class="p-8 space-y-8">
+                <!-- Gateways -->
+                <div>
+                  <h4 class="font-semibold text-slate-800 mb-4">Gateways</h4>
+                  <div class="space-y-4">
+                    <!-- Credit Cards -->
+                    <div class="flex items-center justify-between bg-slate-50 rounded-xl p-4 border border-slate-200">
+                      <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
+                          <span class="material-symbols-outlined">credit_card</span>
+                        </div>
+                        <div>
+                          <p class="font-semibold text-slate-800">Credit/Debit Cards</p>
+                          <p class="text-xs text-slate-500">Accept Visa, MasterCard, and AMEX via your processor.</p>
+                        </div>
+                      </div>
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" checked />
+                        <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:bg-white after:border after:border-gray-300 after:rounded-full after:transition-all peer-checked:bg-primary"></div>
+                      </label>
+                    </div>
+
+                    <!-- Bank Transfer -->
+                    <div class="flex items-center justify-between rounded-xl p-4 border border-slate-200">
+                      <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-lg bg-green-100 text-green-600 flex items-center justify-center">
+                          <span class="material-symbols-outlined">account_balance</span>
+                        </div>
+                        <div>
+                          <p class="font-semibold text-slate-800">Bank Transfer</p>
+                          <p class="text-xs text-slate-500">Display bank details and confirm payments manually.</p>
+                        </div>
+                      </div>
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" />
+                        <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:bg-white after:border after:border-gray-300 after:rounded-full after:transition-all peer-checked:bg-primary"></div>
+                      </label>
+                    </div>
+
+                    <!-- PayPal -->
+                    <div class="flex items-center justify-between rounded-xl p-4 border border-slate-200">
+                      <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center">
+                          <span class="material-symbols-outlined">payments</span>
+                        </div>
+                        <div>
+                          <p class="font-semibold text-slate-800">PayPal</p>
+                          <p class="text-xs text-slate-500">Quick checkout experience with buyer protection.</p>
+                        </div>
+                      </div>
+                      <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" class="sr-only peer" />
+                        <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:bg-white after:border after:border-gray-300 after:rounded-full after:transition-all peer-checked:bg-primary"></div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Currency & Rounding -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Settlement Currency</label>
+                    <select class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5">
+                      <option selected>LKR - Sri Lankan Rupee</option>
+                      <option>USD - US Dollar</option>
+                      <option>EUR - Euro</option>
+                    </select>
+                    <p class="text-xs text-slate-500">Applies to your payment processor settlements.</p>
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Price Rounding</label>
+                    <select class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5">
+                      <option>None</option>
+                      <option>Round to nearest .00</option>
+                      <option selected>Round to nearest .99</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Fraud & Capture -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="flex items-center justify-between rounded-xl p-4 border border-slate-200">
+                    <div>
+                      <p class="font-semibold text-slate-800">Auto-Capture Payments</p>
+                      <p class="text-xs text-slate-500">Charge cards immediately on order placement.</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" checked />
+                      <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:bg-white after:border after:border-gray-300 after:rounded-full after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+
+                  <div class="flex items-center justify-between rounded-xl p-4 border border-slate-200">
+                    <div>
+                      <p class="font-semibold text-slate-800">AVS/CVV Checks</p>
+                      <p class="text-xs text-slate-500">Decline mismatched addresses and security codes.</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" checked />
+                      <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:bg-white after:border after:border-gray-300 after:rounded-full after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- =================== Shipping =================== -->
+          <div class="tab-panel" id="shipping">
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="px-8 py-6 border-b border-slate-100 bg-slate-50/30">
+                <h3 class="text-lg font-bold text-slate-800">Shipping Settings</h3>
+                <p class="text-sm text-slate-500">Define zones, methods, and delivery windows.</p>
+              </div>
+
+              <div class="p-8 space-y-8">
+                <!-- Zones -->
+                <div>
+                  <h4 class="font-semibold text-slate-800 mb-4">Zones & Methods</h4>
+                  <div class="space-y-4">
+                    <div class="rounded-xl border border-slate-200 p-4">
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <p class="font-semibold text-slate-800">Sri Lanka (All Districts)</p>
+                          <p class="text-xs text-slate-500">Applies to all addresses within Sri Lanka</p>
+                        </div>
+                        <a href="#" class="text-sm text-primary hover:underline">Manage</a>
+                      </div>
+                      <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+                          <p class="font-medium text-slate-700">Standard</p>
+                          <p class="text-xs text-slate-500">3–5 business days</p>
+                          <p class="text-xs mt-1">LKR 450</p>
+                        </div>
+                        <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+                          <p class="font-medium text-slate-700">Express</p>
+                          <p class="text-xs text-slate-500">1–2 business days</p>
+                          <p class="text-xs mt-1">LKR 900</p>
+                        </div>
+                        <div class="rounded-lg bg-slate-50 border border-slate-200 p-3">
+                          <p class="font-medium text-slate-700">Store Pickup</p>
+                          <p class="text-xs text-slate-500">Same day</p>
+                          <p class="text-xs mt-1">Free</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="rounded-xl border border-slate-200 p-4">
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <p class="font-semibold text-slate-800">International</p>
+                          <p class="text-xs text-slate-500">Calculated at checkout</p>
+                        </div>
+                        <a href="#" class="text-sm text-primary hover:underline">Manage</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Packaging & Handling -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div class="space-y-2 md:col-span-2">
+                    <label class="text-sm font-semibold text-slate-700">Default Package</label>
+                    <select class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5">
+                      <option>Box – 30 × 20 × 15 cm</option>
+                      <option>Envelope – 25 × 18 cm</option>
+                      <option>Tube – 60 × 8 cm</option>
+                    </select>
+                    <p class="text-xs text-slate-500">Used when no product dimensions are provided.</p>
+                  </div>
+                  <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Handling Fee</label>
+                    <input type="number" placeholder="0.00" class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5" />
+                    <p class="text-xs text-slate-500">Optional fee added to each shipment.</p>
+                  </div>
+                </div>
+
+                <!-- Free Shipping Rule -->
+                <div class="rounded-xl border border-slate-200 p-4">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-semibold text-slate-800">Free Shipping Threshold</p>
+                      <p class="text-xs text-slate-500">Offer free shipping above an order subtotal.</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" checked />
+                      <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:bg-white after:border after:border-gray-300 after:rounded-full after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    <div class="space-y-2">
+                      <label class="text-sm font-semibold text-slate-700">Threshold (LKR)</label>
+                      <input type="number" value="15000" class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5" />
+                    </div>
+                    <div class="space-y-2">
+                      <label class="text-sm font-semibold text-slate-700">Eligible Zone</label>
+                      <select class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5">
+                        <option>All Sri Lanka</option>
+                        <option>Colombo Only</option>
+                        <option>International</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- =================== Taxes =================== -->
+          <div class="tab-panel" id="taxes">
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="px-8 py-6 border-b border-slate-100 bg-slate-50/30">
+                <h3 class="text-lg font-bold text-slate-800">Tax Settings</h3>
+                <p class="text-sm text-slate-500">Configure tax calculation, inclusive pricing, and rates.</p>
+              </div>
+
+              <div class="p-8 space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div class="flex items-center justify-between rounded-xl p-4 border border-slate-200">
+                    <div>
+                      <p class="font-semibold text-slate-800">Prices include tax</p>
+                      <p class="text-xs text-slate-500">If enabled, product prices are tax-inclusive.</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" />
+                      <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:bg-white after:border after:border-gray-300 after:rounded-full after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Default Tax Region</label>
+                    <select class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5">
+                      <option selected>Sri Lanka</option>
+                      <option>United States</option>
+                      <option>European Union</option>
+                    </select>
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Tax Calculation</label>
+                    <select class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5">
+                      <option>Line item level</option>
+                      <option selected>Order subtotal level</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Rates Table (example static) -->
+                <div>
+                  <h4 class="font-semibold text-slate-800 mb-4">Rates</h4>
+                  <div class="overflow-hidden border border-slate-200 rounded-xl">
+                    <table class="min-w-full divide-y divide-slate-200 text-sm">
+                      <thead class="bg-slate-50">
+                        <tr>
+                          <th class="px-4 py-2 text-left font-semibold text-slate-700">Region</th>
+                          <th class="px-4 py-2 text-left font-semibold text-slate-700">Type</th>
+                          <th class="px-4 py-2 text-left font-semibold text-slate-700">Rate</th>
+                          <th class="px-4 py-2 text-right font-semibold text-slate-700">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-100 bg-white">
+                        <tr>
+                          <td class="px-4 py-2">Sri Lanka</td>
+                          <td class="px-4 py-2">VAT</td>
+                          <td class="px-4 py-2">15%</td>
+                          <td class="px-4 py-2 text-right">
+                            <a href="#" class="text-primary hover:underline">Edit</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="px-4 py-2">International</td>
+                          <td class="px-4 py-2">Import Duties</td>
+                          <td class="px-4 py-2">Calculated</td>
+                          <td class="px-4 py-2 text-right">
+                            <a href="#" class="text-primary hover:underline">Edit</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="mt-3">
+                    <button class="px-4 py-2 rounded-lg border border-slate-300 text-sm font-semibold text-slate-700 hover:bg-slate-50">Add Rate</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- =================== Notifications =================== -->
+          <div class="tab-panel" id="notifications">
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="px-8 py-6 border-b border-slate-100 bg-slate-50/30">
+                <h3 class="text-lg font-bold text-slate-800">Notifications</h3>
+                <p class="text-sm text-slate-500">Manage email and SMS alerts for your store.</p>
+              </div>
+
+              <div class="p-8 space-y-8">
+                <!-- Email -->
+                <div class="space-y-4">
+                  <h4 class="font-semibold text-slate-800">Email</h4>
+
+                  <div class="rounded-xl border border-slate-200 p-4 flex items-center justify-between">
+                    <div>
+                      <p class="font-semibold text-slate-800">Order Confirmation</p>
+                      <p class="text-xs text-slate-500">Send to customers after successful checkout.</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" checked />
+                      <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:bg-white after:border after:border-gray-300 after:rounded-full after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+
+                  <div class="rounded-xl border border-slate-200 p-4 flex items-center justify-between">
+                    <div>
+                      <p class="font-semibold text-slate-800">Shipping Update</p>
+                      <p class="text-xs text-slate-500">Notify customers when orders are fulfilled.</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" checked />
+                      <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:bg-white after:border after:border-gray-300 after:rounded-full after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                      <label class="text-sm font-semibold text-slate-700">From Address</label>
+                      <input type="email" value="no-reply@nettec.lk" class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5" />
+                    </div>
+                    <div class="space-y-2">
+                      <label class="text-sm font-semibold text-slate-700">BCC (optional)</label>
+                      <input type="email" placeholder="ops@nettec.lk" class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SMS -->
+                <div class="space-y-4">
+                  <h4 class="font-semibold text-slate-800">SMS</h4>
+                  <div class="rounded-xl border border-slate-200 p-4 flex items-center justify-between">
+                    <div>
+                      <p class="font-semibold text-slate-800">Critical Alerts</p>
+                      <p class="text-xs text-slate-500">Low inventory, payment failures, and system incidents.</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" />
+                      <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:bg-white after:border after:border-gray-300 after:rounded-full after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="space-y-2 md:col-span-2">
+                      <label class="text-sm font-semibold text-slate-700">Admin Recipients</label>
+                      <input type="text" placeholder="+94 7X XXX XXXX, +94 7Y YYY YYYY" class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5" />
+                      <p class="text-xs text-slate-500">Comma-separated phone numbers (E.164 format).</p>
+                    </div>
+                    <div class="space-y-2">
+                      <label class="text-sm font-semibold text-slate-700">Provider</label>
+                      <select class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5">
+                        <option>Twilio</option>
+                        <option>Nexmo</option>
+                        <option>Custom</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- =================== Security =================== -->
+          <div class="tab-panel" id="security">
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="px-8 py-6 border-b border-slate-100 bg-slate-50/30">
+                <h3 class="text-lg font-bold text-slate-800">Security</h3>
+                <p class="text-sm text-slate-500">Protect accounts and sensitive operations.</p>
+              </div>
+
+              <div class="p-8 space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="rounded-xl border border-slate-200 p-4 flex items-center justify-between">
+                    <div>
+                      <p class="font-semibold text-slate-800">Require 2FA for Admins</p>
+                      <p class="text-xs text-slate-500">All admin logins must pass a second factor.</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" class="sr-only peer" checked />
+                      <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:bg-white after:border after:border-gray-300 after:rounded-full after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                  </div>
+
+                  <div class="rounded-xl border border-slate-200 p-4 flex items-center justify-between">
+                    <div>
+                      <p class="font-semibold text-slate-800">Session Timeout (mins)</p>
+                      <p class="text-xs text-slate-500">Auto-logout after inactivity.</p>
+                    </div>
+                    <input type="number" min="5" value="30" class="w-28 rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5 text-center" />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">Password Policy</label>
+                    <select class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5">
+                      <option>Standard (min 8 chars)</option>
+                      <option selected>Strong (min 10 chars + symbols)</option>
+                      <option>Custom</option>
+                    </select>
+                  </div>
+                  <div class="space-y-2">
+                    <label class="text-sm font-semibold text-slate-700">IP Allowlist (Admin)</label>
+                    <input type="text" placeholder="e.g. 203.0.113.0/24, 198.51.100.10" class="w-full rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5" />
+                    <p class="text-xs text-slate-500">Optional; restrict admin access to known IPs.</p>
+                  </div>
+                </div>
+
+                <div class="rounded-xl border border-slate-200 p-4">
+                  <p class="font-semibold text-slate-800">Audit Log Retention</p>
+                  <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <select class="rounded-xl border-slate-200 focus:border-accent focus:ring-accent text-sm py-2.5">
+                      <option>30 days</option>
+                      <option selected>90 days</option>
+                      <option>180 days</option>
+                      <option>365 days</option>
+                    </select>
+                    <button class="px-4 py-2 rounded-xl border border-slate-300 text-sm font-semibold text-slate-700 hover:bg-slate-50">Export Logs</button>
+                    <button class="px-4 py-2 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary/95">Purge Now</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div> <!-- /tab-content -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Tiny Tabs Script -->
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.tab-panel');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Update active tab
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Update active panel
+        const target = tab.dataset.tab;
+        panels.forEach(p => p.classList.remove('active'));
+        const panel = document.getElementById(target);
+        if (panel) panel.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>

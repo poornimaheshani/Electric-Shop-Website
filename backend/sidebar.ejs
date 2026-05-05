@@ -1,0 +1,51 @@
+<aside class="w-64 bg-primary text-white fixed h-full">
+
+    <div class="p-6 flex items-center gap-3">
+        <div class="bg-accent text-primary p-1.5 rounded-lg">
+            <span class="material-symbols-outlined font-bold">bolt</span>
+        </div>
+        <h1 class="text-xl font-bold">
+            NetTec <span class="text-accent">Admin</span>
+        </h1>
+    </div>
+
+    <nav class="mt-6 px-3 space-y-1">
+
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg <%= activePage === 'dashboard' ? 'sidebar-item-active' : '' %>" href="/admin/dashboard">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span>Dashboard</span>
+        </a>
+
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10" href="/admin/products">
+            <span class="material-symbols-outlined">inventory_2</span>
+            <span>Products</span>
+        </a>
+
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10" href="/admin/orders">
+            <span class="material-symbols-outlined">shopping_cart</span>
+            <span>Orders</span>
+        </a>
+
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10" href="/admin/customers">
+            <span class="material-symbols-outlined">group</span>
+            <span>Customers</span>
+        </a>
+        
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10" href="/admin/reports">
+            <span class="material-symbols-outlined">bar_chart</span>
+            <span>Reports</span>
+        </a>
+
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10" href="/admin/settings">
+            <span class="material-symbols-outlined">settings</span>
+            <span>Settings</span>
+        </a>
+
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-600 mt-6" href="/admin/login">
+            <span class="material-symbols-outlined">logout</span>
+            <span>Logout</span>
+        </a>
+
+    </nav>
+
+</aside>

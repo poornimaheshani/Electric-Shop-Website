@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Edit Customer - NetTec Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+  body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+  .sidebar-item-active { background-color: rgba(255, 255, 255, 0.1); border-left: 4px solid #FFC107; }
+</style>
+</head>
+<body class="antialiased text-slate-800">
+<div class="flex min-h-screen">
+  <%- include('../partials/sidebar') %>
+  <main class="flex-1 ml-64 flex flex-col">
+    <%- include('../partials/header') %>
+    <section class="p-8 max-w-3xl">
+      <div class="mb-4">
+        <a href="/admin/customers" class="text-slate-600 hover:text-slate-900">&larr; Back to Customers</a>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+        <h1 class="text-2xl font-bold text-slate-900 mb-6">Edit Customer #<%= customer.id %></h1>
+        <form method="POST" action="/admin/customers/edit/<%= customer.id %>" class="space-y-4">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Name</label>
+            <input type="text" name="name" value="<%= customer.name || '' %>" class="w-full rounded border-slate-300" required/>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Email</label>
+            <input type="email" name="email" value="<%= customer.email || '' %>" class="w-full rounded border-slate-300"/>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Phone</label>
+            <input type="text" name="phone" value="<%= customer.phone || '' %>" class="w-full rounded border-slate-300"/>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Address</label>
+            <textarea name="address" rows="3" class="w-full rounded border-slate-300"><%= customer.address || '' %></textarea>
+          </div>
+          <div class="pt-2 flex gap-3">
+            <button type="submit" class="px-5 py-2 rounded bg-yellow-400 text-slate-900 font-semibold">Update Customer</button>
+            <a href="/admin/customers" class="px-5 py-2 rounded bg-slate-100 text-slate-700">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+</body>
+</html>

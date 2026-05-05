@@ -1,0 +1,79 @@
+<header class="bg-white border-b h-16 flex items-center justify-between px-8 relative">
+
+  <h2 class="text-xl font-bold text-primary">
+    <%= pageTitle %>
+  </h2>
+
+  <div class="flex items-center gap-4">
+
+    <!-- Notification Bell -->
+    <div class="relative" id="notifWrapper">
+      <button onclick="toggleNotif()" class="p-2 hover:bg-slate-100 rounded-full relative">
+        <span class="material-symbols-outlined">notifications</span>
+        <% if (typeof pendingOrders !== 'undefined' && pendingOrders > 0) { %>
+        <span id="notifBadge" class="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+          <%= pendingOrders %>
+        </span>
+        <% } %>
+      </button>
+
+      <!-- Dropdown -->
+      <div id="notifDropdown"
+           class="hidden absolute right-0 top-12 w-72 bg-white border rounded-xl shadow-lg z-50">
+        <div class="p-4 border-b flex items-center justify-between">
+          <p class="text-sm font-bold text-slate-700">Notifications</p>
+          <button onclick="dismissAll()" class="text-xs text-blue-600 hover:underline">Mark all read</button>
+        </div>
+        <div id="notifList" class="max-h-64 overflow-y-auto">
+          <% if (typeof pendingOrders !== 'undefined' && pendingOrders > 0) { %>
+          <a href="/admin/orders?status=pending"
+             class="flex items-start gap-3 p-4 hover:bg-slate-50 border-b notif-item">
+            <span class="material-symbols-outlined text-yellow-500 mt-0.5">pending</span>
+            <div>
+              <p class="text-sm font-semibold text-slate-700"><%= pendingOrders %> Pending Order<%= pendingOrders > 1 ? 's' : '' %></p>
+              <p class="text-xs text-slate-400">Require your attention</p>
+            </div>
+          </a>
+          <% } else { %>
+          <div class="p-6 text-center text-slate-400 text-sm">No new notifications</div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Info -->
+    <div class="flex items-center gap-3">
+      <div class="text-right">
+        <p class="text-sm font-bold">Admin User</p>
+        <p class="text-xs text-slate-500">Admin</p>
+      </div>
+      <div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-sm">A</div>
+    </div>
+
+  </div>
+
+</header>
+
+<script>
+function toggleNotif() {
+  const dd = document.getElementById('notifDropdown');
+  dd.classList.toggle('hidden');
+}
+
+function dismissAll() {
+  document.getElementById('notifDropdown').classList.add('hidden');
+  const badge = document.getElementById('notifBadge');
+  if (badge) badge.remove();
+  document.querySelectorAll('.notif-item').forEach(el => el.remove());
+  const list = document.getElementById('notifList');
+  if (list) list.innerHTML = '<div class="p-6 text-center text-slate-400 text-sm">No new notifications</div>';
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  const wrapper = document.getElementById('notifWrapper');
+  if (wrapper && !wrapper.contains(e.target)) {
+    document.getElementById('notifDropdown').classList.add('hidden');
+  }
+});
+</script>

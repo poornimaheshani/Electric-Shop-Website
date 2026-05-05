@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= pageTitle %> - NetTec Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+.bg-primary { background-color: #0B1F3A; }
+.bg-accent-yellow { background-color: #FFC107; }
+</style>
+</head>
+<body class="flex min-h-screen bg-slate-100">
+
+<%- include('../partials/sidebar') %>
+
+<div class="ml-64 flex-1 flex flex-col">
+  <%- include('../partials/header') %>
+
+  <main class="p-8">
+
+    <!-- Back Button -->
+    <a href="/admin/products" 
+       class="flex items-center gap-2 text-slate-500 hover:text-slate-800 mb-6">
+      <span class="material-symbols-outlined">arrow_back</span>
+      Back to Products
+    </a>
+
+    <div class="bg-white rounded-xl shadow p-8 flex gap-10">
+
+      <!-- Product Image -->
+      <div class="w-64 h-64 flex-shrink-0">
+        <img src="<%= product.image ? '/uploads/' + product.image : '/images/no-image.png' %>"
+             class="w-full h-full object-cover rounded-xl border"/>
+      </div>
+
+      <!-- Product Details -->
+      <div class="flex-1">
+
+        <h2 class="text-3xl font-bold mb-2"><%= product.name %></h2>
+        <p class="text-slate-400 text-sm mb-6">Category: <%= product.category %></p>
+
+        <div class="grid grid-cols-2 gap-4 mb-6">
+
+          <div class="bg-slate-50 rounded-lg p-4">
+            <p class="text-xs text-slate-400 uppercase mb-1">Price</p>
+            <p class="text-2xl font-bold text-primary">Rs <%= product.price.toLocaleString() %></p>
+          </div>
+
+          <div class="bg-slate-50 rounded-lg p-4">
+            <p class="text-xs text-slate-400 uppercase mb-1">Stock</p>
+            <p class="text-2xl font-bold"><%= product.stock %> units</p>
+          </div>
+
+          <div class="bg-slate-50 rounded-lg p-4">
+            <p class="text-xs text-slate-400 uppercase mb-1">Status</p>
+            <span class="px-3 py-1 rounded-full text-xs font-bold uppercase
+              <%= product.status === 'In Stock' 
+              ? 'bg-emerald-100 text-emerald-700' 
+              : product.status === 'Low Stock' 
+              ? 'bg-amber-100 text-amber-700' 
+              : 'bg-red-100 text-red-700' %>">
+              <%= product.status %>
+            </span>
+          </div>
+
+          <div class="bg-slate-50 rounded-lg p-4">
+            <p class="text-xs text-slate-400 uppercase mb-1">Added Date</p>
+            <p class="text-sm font-medium">
+              <%= new Date(product.created_at).toLocaleDateString() %>
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
